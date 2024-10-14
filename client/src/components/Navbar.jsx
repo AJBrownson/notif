@@ -1,14 +1,17 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { FaPeopleGroup } from "react-icons/fa6";
 import { BiCalendarEvent } from "react-icons/bi";
 import { MdLogout } from "react-icons/md";
 
 import Modal from "./Modal";
+import { useUser } from "../context/UserContext"; 
 
 export default function Navbar() {
+  const { user, logout } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -17,6 +20,22 @@ export default function Navbar() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  // const handleLogout = () => {
+  //   // Clear user state
+  //   setUser(null);
+
+  //   // Optionally clear any tokens or user data stored in localStorage/sessionStorage
+  //   localStorage.removeItem('token');
+
+  //   // Redirect to login or home page
+  //   navigate('/login'); // Use navigate instead of router.push
+  // };
 
   return (
     <main className="bg-[#0a0a0a] text-white p-4 md:px-10 border-b-[1px] border-slate-800 fixed w-full">
@@ -41,8 +60,12 @@ export default function Navbar() {
           </button>
         </ul>
 
-        <button className="py-2 px-4 bg-red-600 hover:bg-red-700 rounded-md text-white font-bold text-sm">
-          Signout
+        <button
+          onClick={handleLogout}
+          className="py-2 px-4 bg-red-600 hover:bg-red-700 rounded-md text-white font-bold text-sm flex items-center space-x-2"
+        >
+          <MdLogout />
+          <span>Signout</span>
         </button>
       </nav>
 
