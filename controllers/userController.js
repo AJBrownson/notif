@@ -154,7 +154,7 @@ const authenticateToken = (req, res, next) => {
 // Get the current user's data
 exports.getCurrentUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('username email'); // Adjust fields as needed
+    const user = await User.findById(req.user.id).select('username email');
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     res.json(user);
@@ -164,4 +164,4 @@ exports.getCurrentUser = async (req, res) => {
 };
 
 // Export all functions
-exports.authenticateToken = authenticateToken; // Export the middleware as well
+exports.authenticateToken = authenticateToken; 

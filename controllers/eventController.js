@@ -2,10 +2,10 @@ const Event = require('../models/eventModel');
 
 // Create a new event
 exports.createEvent = async (req, res) => {
-  const { eventName, eventDesc, eventTime, eventDate, user } = req.body;
+  const { eventName, eventDesc, eventTime, eventDate } = req.body;
 
   // Validate the required fields
-  if (!eventName || !eventDesc || !eventTime || !eventDate || !user) {
+  if (!eventName || !eventDesc || !eventTime || !eventDate) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
@@ -15,11 +15,23 @@ exports.createEvent = async (req, res) => {
       eventDesc,
       eventTime,
       eventDate,
-      user,
+      user: req.user,
     });
 
     await newEvent.save();
     res.status(201).json({ message: 'Event created successfully', event: newEvent });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+// Get all events
+exports.getAllEvents = async (req, res) => {
+  try {
+    const events = await Event.find().populate('user', 'username');
+    res.status(200).json(events);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });

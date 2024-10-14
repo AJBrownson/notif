@@ -22,13 +22,18 @@ export default function Login() {
         password,
       });
 
+      // if (res.status === 200) {
+      //   setSuccess("Login successful!");
+      //   // Call the login function from context
+      //   await login(res.data.token, res.data.userId);
+      //   setTimeout(() => {
+      //     navigate("/home");
+      //   }, 100);
+      // }
       if (res.status === 200) {
         setSuccess("Login successful!");
-        // Call the login function from context
         await login(res.data.token, res.data.userId);
-        setTimeout(() => {
           navigate("/home");
-        }, 100);
       }
     } catch (error) {
       if (error.response && error.response.data) {
