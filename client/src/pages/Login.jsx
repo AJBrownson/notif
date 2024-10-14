@@ -1,47 +1,47 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { useUser } from "../context/UserContext";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useUser();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("")
+  const [success, setSuccess] = useState("");
 
-  
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    axios
-      .post("http://localhost:5000/api/users/login", {
+    try {
+      const res = await axios.post("http://localhost:5000/api/users/login", {
         username,
         email,
         password,
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          setSuccess("Login successful!")
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("userId", res.data.userId);
-          // navigate("/home");
-          setTimeout(() => {
-            navigate("/home");
-          }, 100);
-        }
-      })
-      .catch((error) => {
-        if (error.res && error.res.data) {
-          const errorMessage =
-            error.res.data.error ||
-            error.res.data.message ||
-            "Login failed. Try again.";
-          setError(errorMessage);
-        } else {
-          setError(" An error occurred. Try again.");
-        }
       });
+
+      if (res.status === 200) {
+        setSuccess("Login successful!");
+        // Call the login function from context
+        await login(res.data.token, res.data.userId);
+        setTimeout(() => {
+          navigate("/home");
+        }, 100);
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const errorMessage =
+          error.response.data.error ||
+          error.response.data.message ||
+          "Login failed. Try again.";
+        setError(errorMessage);
+      } else {
+        setError("An error occurred. Try again.");
+      }
+    }
+
     setUsername("");
     setEmail("");
     setPassword("");
@@ -98,7 +98,7 @@ export default function Login() {
         {error && (
           <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
         )}
-          {success && (
+        {success && (
           <p className="text-green-500 text-sm mt-2 text-center">{success}</p>
         )}
         <div className="mt-3 text-center text-xs">

@@ -9,7 +9,7 @@ import Modal from "./Modal";
 import { useUser } from "../context/UserContext"; 
 
 export default function Navbar() {
-  const { user, logout } = useUser();
+  const { logout } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 

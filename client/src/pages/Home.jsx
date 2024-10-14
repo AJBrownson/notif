@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import {useUser} from "../context/UserContext";
 
 export default function Home() {
-  const { user, loading, error, logout } = useUser();
+  const { user, loading, } = useUser();
 
   if (loading) return <p>Loading...</p>;
 
